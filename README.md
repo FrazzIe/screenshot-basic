@@ -1,5 +1,5 @@
 # screenshot-basic for FiveM
-
+OG repo : https://github.com/citizenfx/screenshot-basic
 ## Modified API
 + Added support to screenshot a selected area of the screen using the new arguments.
 
