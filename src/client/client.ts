@@ -35,6 +35,10 @@ exp('requestScreenshot', (options: any, cb: (result: string) => void) => {
 
     const realCb = (cb !== undefined) ? cb : options;
 
+    realOptions.x = options.x;
+    realOptions.y = options.y;
+    realOptions.w = options.w;
+    realOptions.h = options.h;
     realOptions.resultURL = null;
     realOptions.targetField = null;
     realOptions.targetURL = `http://${GetCurrentResourceName()}/screenshot_created`;
@@ -53,6 +57,10 @@ exp('requestScreenshotUpload', (url: string, field: string, options: any, cb: (r
 
     const realCb = (cb !== undefined) ? cb : options;
 
+    realOptions.x = options.x;
+    realOptions.y = options.y;
+    realOptions.w = options.w;
+    realOptions.h = options.h;
     realOptions.targetURL = url;
     realOptions.targetField = field;
     realOptions.resultURL = `http://${GetCurrentResourceName()}/screenshot_created`;
@@ -66,7 +74,7 @@ exp('requestScreenshotUpload', (url: string, field: string, options: any, cb: (r
 
 onNet('screenshot_basic:requestScreenshot', (options: any, url: string) => {
     options.encoding = options.encoding || 'jpg';
-
+    
     options.targetURL = `http://${GetCurrentServerEndpoint()}${url}`;
     options.targetField = 'file';
     options.resultURL = null;
