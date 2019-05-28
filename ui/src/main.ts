@@ -23,6 +23,11 @@ class ScreenshotRequest {
 
     targetURL: string;
     targetField: string;
+
+    x: number;
+    y: number;
+    w: number;
+    h: number;
 }
 
 // from https://stackoverflow.com/a/12300351
@@ -61,26 +66,26 @@ class ScreenshotUI {
         const rtTexture = new WebGLRenderTarget( window.innerWidth, window.innerHeight, { minFilter: LinearFilter, magFilter: NearestFilter, format: RGBAFormat, type: UnsignedByteType } );
         const gameTexture: any = new CfxTexture( );
         gameTexture.needsUpdate = true;
-
+ 
         const material = new ShaderMaterial( {
 
             uniforms: { "tDiffuse": { value: gameTexture } },
             vertexShader: `
-			varying vec2 vUv;
+                varying vec2 vUv;
 
-			void main() {
-				vUv = vec2(uv.x, 1.0-uv.y); // fuck gl uv coords
-				gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
-			}
-`,
+                void main() {
+                    vUv = vec2(uv.x, 1.0-uv.y); // fuck gl uv coords
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+                }
+            `,
             fragmentShader: `
-			varying vec2 vUv;
-			uniform sampler2D tDiffuse;
+                varying vec2 vUv;
+                uniform sampler2D tDiffuse;
 
-			void main() {
-				gl_FragColor = texture2D( tDiffuse, vUv );
-			}
-`
+                void main() {
+                    gl_FragColor = texture2D( tDiffuse, vUv );
+                }
+            `
 
         } );
 
@@ -123,20 +128,20 @@ class ScreenshotUI {
 
     handleRequest(request: ScreenshotRequest) {
         // read the screenshot
-        const read = new Uint8Array(window.innerWidth * window.innerHeight * 4);
-        this.renderer.readRenderTargetPixels(this.rtTexture, 0, 0, window.innerWidth, window.innerHeight, read);
+        const read = new Uint8Array(request.w * request.h * 4);
+        this.renderer.readRenderTargetPixels(this.rtTexture, request.x, request.y, request.w, request.h, read);
 
         // create a temporary canvas to compress the image
         const canvas = document.createElement('canvas');
         canvas.style.display = 'inline';
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        canvas.width = request.w;
+        canvas.height = request.h;
 
         // draw the image on the canvas
         const d = new Uint8ClampedArray(read.buffer);
 
         const cxt = canvas.getContext('2d');
-        cxt.putImageData(new ImageData(d, window.innerWidth, window.innerHeight), 0, 0);
+        cxt.putImageData(new ImageData(d, request.w, request.h), request.x, request.y);
 
         // encode the image
         let type = 'image/png';
