@@ -30,6 +30,10 @@ on('__cfx_nui:screenshot_created', (body: any, cb: (arg: any) => void) => {
 
 exp('requestScreenshot', (options: any, cb: (result: string) => void) => {
     const realOptions = (cb !== undefined) ? options : {
+        x: 0,
+        y: 0,
+        w: 0,
+        h: 0,
         encoding: 'jpg'
     };
 
@@ -53,6 +57,10 @@ exp('requestScreenshot', (options: any, cb: (result: string) => void) => {
 exp('requestScreenshotUpload', (url: string, field: string, options: any, cb: (result: string) => void) => {
     const realOptions = (cb !== undefined) ? options : {
         headers: {},
+        x: 0,
+        y: 0,
+        w: 0,
+        h: 0,
         encoding: 'jpg'
     };
     
@@ -74,6 +82,11 @@ exp('requestScreenshotUpload', (url: string, field: string, options: any, cb: (r
 });
 
 onNet('screenshot_basic:requestScreenshot', (options: any, url: string) => {
+    options.x = options.x || 0;
+    options.y = options.y || 0;
+    options.w = options.w || 0;
+    options.h = options.h || 0;
+
     options.encoding = options.encoding || 'jpg';
     
     options.targetURL = `http://${GetCurrentServerEndpoint()}${url}`;

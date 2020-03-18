@@ -129,6 +129,9 @@ class ScreenshotUI {
 
     handleRequest(request: ScreenshotRequest) {
         // read the screenshot
+        request.w = request.w == 0 ? window.innerWidth : request.w
+        request.h = request.h == 0 ? window.innerHeight : request.h //capture fullscreen if height and width is 0
+
         const read = new Uint8Array(request.w * request.h * 4);
         this.renderer.readRenderTargetPixels(this.rtTexture, request.x, request.y, request.w, request.h, read);
 
