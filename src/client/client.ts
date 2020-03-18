@@ -52,9 +52,10 @@ exp('requestScreenshot', (options: any, cb: (result: string) => void) => {
 
 exp('requestScreenshotUpload', (url: string, field: string, options: any, cb: (result: string) => void) => {
     const realOptions = (cb !== undefined) ? options : {
+        headers: {},
         encoding: 'jpg'
     };
-
+    
     const realCb = (cb !== undefined) ? cb : options;
 
     realOptions.x = options.x;
